@@ -1,5 +1,6 @@
 ##check_wls.pl##
 
+```
 ###usage: **check_wls.pl** -dhjortT -x <Port:ManagedServerName,...> ###
   		-s <Server Name or IP> -W <path to WLST>
   		-J <path to jmx.py file>
@@ -20,8 +21,10 @@
   		**check_wls.pl** -dhjortT
   		-L <Path to Port:ManagedServer Config>
   		-c <critical value> -w <warning value>
-	
-	###SERVER Connection Details:###
+```	
+
+```
+###SERVER Connection Details:###
 	-l	Pull a list of managed servers and ports from a 
 		configuration file.  The default location is at
 		/usr/local/nagios/etc/wls_config.  The location
@@ -173,8 +176,10 @@
 	-p	This is used to set the password in order to connect
 		to a managed server.  This must be used with the -u
 		flag.  This can not be used with the -U and -K flags.
-		
-	###Available CHECKS:###
+```
+
+```
+###Available CHECKS:###
 	-h	Check the Heap Free Percentage on a managed server.  
 		Use this in conjunction with -c and -w for critical 
 		and warning.  The lower the number, the less heap 
@@ -224,8 +229,10 @@
 		than critical.  An exit with a critical status occurs if the total
 		exceeds the critical threshold.  The critical value must be greater 
 		than the warning threshold.
-		
-	###ALERT Threshold Details:###
+```
+
+```		
+###ALERT Threshold Details:###
 	-c <interger>
 		If used with the -h option, exit with a CRITICAL status 
 		if less than Heap Percent Free and less than the WARNING 
@@ -243,3 +250,4 @@
 		CRITICAL status.
 	
 	-d Debug
+```
