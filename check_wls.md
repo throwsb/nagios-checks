@@ -1,30 +1,36 @@
-##check_wls.pl##
+##check_wls.pl
 
+#### **check_wls.pl** - Checks the health of a Weblogic instance using jmx and wlst. 
+
+#### Usage:
 ```
-###usage: **check_wls.pl** -dhjortT -x <Port:ManagedServerName,...> ###
+check_wls.pl -dhjortT -x <Port:ManagedServerName,...> 
   		-s <Server Name or IP> -W <path to WLST>
   		-J <path to jmx.py file>
   		-U <path to userConfigFile>
   		-K <path to userKeyFile>
   		-c <critical value> -w <warning value> 
-  		
-  		**check_wls.pl** -dhjortT -x <Port:ManagedServerName,...> 
+```
+```
+check_wls.pl -dhjortT -x <Port:ManagedServerName,...> 
   		-s <Server Name or IP> -W <path to WLST>
   		-J <path to jmx.py file>
   		-u <user name>
   		-p <password>
   		-c <critical value> -w <warning value> 
-  		
-  		**check_wls.pl** -dhjortT -l
+```
+```  		
+check_wls.pl -dhjortT -l
   		-c <critical value> -w <warning value>
-  		
-  		**check_wls.pl** -dhjortT
+```	
+```
+check_wls.pl -dhjortT
   		-L <Path to Port:ManagedServer Config>
   		-c <critical value> -w <warning value>
 ```	
 
+#### SERVER Connection Details:
 ```
-###SERVER Connection Details:###
 	-l	Pull a list of managed servers and ports from a 
 		configuration file.  The default location is at
 		/usr/local/nagios/etc/wls_config.  The location
@@ -178,8 +184,8 @@
 		flag.  This can not be used with the -U and -K flags.
 ```
 
+#### Available CHECKS:
 ```
-###Available CHECKS:###
 	-h	Check the Heap Free Percentage on a managed server.  
 		Use this in conjunction with -c and -w for critical 
 		and warning.  The lower the number, the less heap 
@@ -231,8 +237,8 @@
 		than the warning threshold.
 ```
 
+#### ALERT Threshold Details:
 ```		
-###ALERT Threshold Details:###
 	-c <interger>
 		If used with the -h option, exit with a CRITICAL status 
 		if less than Heap Percent Free and less than the WARNING 
@@ -251,3 +257,52 @@
 	
 	-d Debug
 ```
+
+#### Installation and Configuration
+
+##### File location
+
+* check_wls.pl - Default location is /usr/local/nagios/libexec.  
+	* Other location NAGIOS_HOME/libexec
+* jmx.py - Default location is /usr/local/nagios/libexec.  
+	* Other location NAGIOS_HOME/libexec
+* wls_config - This is optional config file.  wls_config-example contains all configuration options.
+	* Default location is /usr/local/nagios/etc/wls_config
+	
+##### Nagios configuration examples
+
+**Command Example**
+	
+Command Name | Command Line
+------------ | --------------
+check_nrpe_wls |  	$USER1$/check_nrpe -H $HOSTADDRESS$ -t 60 -c check_wls -a "$ARG1$"
+	
+	
+Service Configuration Example 1 - Check Heap Free
+	
+Check | Command Name | Argument
+----- | ------------ | --------------	
+Heap Percent Free | check_nrpe_wls | -h -l -w 10 -c 5
+	
+Service Configuration Example 2 - Check Heap Health State
+
+Check | Command Name | Argument
+----- | ------------ | --------------	
+Heap Percent Free | check_nrpe_wls | -r -l
+	
+Service Configuration Example 3 - Check Total Thread Count
+
+Check | Command Name | Argument
+----- | ------------ | --------------	
+Total Thread Count | check_nrpe_wls | -C -l -w 90 -c 95
+	
+	
+**NRPE Client Configuration**
+
+Add to the nrpe common.cfg
+```
+	### WebLogic ###
+	command[check_wls]=/usr/bin/sudo /usr/local/nagios/libexec/check_wls.pl -d  $ARG1$
+```
+
+[Nagios Checks Home](http://throwsb.github.io/nagios-checks/)

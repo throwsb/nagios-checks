@@ -1,0 +1,26 @@
+#wls_config
+
+#The hostname or IP starts out with "hst::". The last 
+#		instance of "hst::<hostname or IP>" will be the 
+#		name used.
+#hst::myhost
+
+#The path to jmx.py starts out with "jmx::". The default
+#		is /usr/local/nagios/libexec/jmx.py
+#jmx::/usr/local/nagios/libexec/jmx.py
+
+#The path to wlst starts out with "wlst::".
+#wlst::</path/to/wlst>
+
+#The credentials used to connect to a managed server can 
+#		either be with a userConfigFile and userKeyFile or a 
+#		username and password.  You can only use one set.
+# example with key files.
+#ucfg::</path/to/userConfigFile>
+#ukey::</path/to/userKeyFile>
+
+#The Port/Managed Server name starts out with "srv::" 
+#		and each port and managed server is separated by a ":".  
+#		One grouping per line.
+#srv::7210:wls10
+#srv::7211:wls11
