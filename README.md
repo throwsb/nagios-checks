@@ -10,7 +10,7 @@ Cheers!
 David
 
 ### List of Nagios Check Scripts
-* **check_wls.pl** - Checks the health of a Weblogic instance using jmx and wlst.  This has been tested using Weblogic 12c.  Please send feedback when running on other versions of WebLogic.  I do not have access to older version to test on.  Full details of the script can be found here [check wls](https://github.com/throwsb/nagios/blob/master/check_wls.md)
+* **check_wls.pl** - Checks the health of a Weblogic instance using jmx and wlst.  This has been tested using Weblogic 12c.  Please send feedback when running on other versions of WebLogic.  I do not have access to older version to test on.  Full details of the script can be found here [check wls](https://github.com/throwsb/nagios-checks/blob/master/check_wls.md)
 
 * **check_hpLocaldisk.pl** - is a check script to monitor local disk status on HP servers.  It connects to the local disk controller using hpacucli or hpssacli 
     and pulls the status of the disks.  Full details of the script can be found here [check hpLocaldisk](https://github.com/throwsb/nagios-checks/blob/master/check_hpLocaldisk.md)
