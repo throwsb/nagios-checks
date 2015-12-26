@@ -3,7 +3,7 @@ Monitoring Check Scripts used with Nagios and NagiosXI
 
 ## Welcome to my Github site.
 
-The following are a list of Nagios check scripts that I have created over the years.  Please feel free to contact me with any feature requests, bug reports, or just to say thank you.  Please feel free to contact me with any feature requests, bug reports, or support for installation and configuration.  
+The following are a list of Nagios check scripts that I have created over the years.  Please feel free to contact me with any feature requests, bug reports, or support for installation and configuration.  
   
 
 Cheers!
