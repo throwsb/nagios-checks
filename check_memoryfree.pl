@@ -36,6 +36,8 @@ $PROB_STATUS;
 
 $FREE="/usr/bin/free";
 $FREEOPTS="-m";
+$FREEVERNG="3.3"; ##This is to check for procps and procps-ng
+$FREENGFLAG=$FALSE;
 $MemTot=0;
 $MemTotGB=0;
 $MemFree=0;
@@ -94,6 +96,14 @@ EOF
   exit($STATUS_UNKNWN);
 }
 
+##Check version of free
+$tmpfreever = (split / /, `$FREE -V`)[-1];
+chomp($tmpfreever);
+
+if ($tmpfreever =~ /^$FREEVERNG/) {
+	$FREENGFLAG=$TRUE;
+}
+Debug ("FREE VERSION > $tmpfreever FLAG > $FREENGFLAG ");
 
 &Get_Memory_Status();
 &CalcMem();
@@ -105,24 +115,42 @@ sub Get_Memory_Status
    Debug (" LINE > $_ ");
    $tmpstrg = $_;
  
-   if ($tmpstrg =~ /^Mem/) {
+   if ($FREENGFLAG) {
+   
+   		if ($tmpstrg =~ /^Mem/) {
  	
- 	Debug ("MATCHED 1 > $tmpstrg");
- 	($mem, $MemTot, @junk) = (split /\s+/, $tmpstrg);
- 	Debug ("MEM > $mem TotMem > $MemTot");
- 	next;
-   }elsif ($tmpstrg =~ /^\-\/\+/) {
+ 			Debug ("MATCHED 1 > $tmpstrg");
+ 			($mem, $MemTot, $MemUsed, $free, $shared, $buff, $MemFree) = (split /\s+/, $tmpstrg);
+ 			Debug ("MEM > $mem TotMem > $total used > $used avail > $avail");
+ 			next;
+
+   		}elsif ($tmpstrg =~ /^Swap/) {
+	 		Debug ("MATCHED 3 > $tmpstrg");
+ 	 		($swap, $SwapTot, $SwapUsed, $SwapFree) = (split /\s+ /, $tmpstrg);
+ 	 		Debug ("STot > $SwapTot; SUsed > $SwapUsed; SFree > $SwapFree ");
+ 	 	next;
+		}
+   	}else {
+ 
+   		if ($tmpstrg =~ /^Mem/) {
  	
- 	Debug ("MATCHED 2 > $tmpstrg");
- 	($buff, $MemUsed, $MemFree) = (split /\s+ /, $tmpstrg);
- 	Debug ("Used > $MemUsed  Free  > $MemFree");
- 	next;
-   }elsif ($tmpstrg =~ /^Swap/) {
-	 Debug ("MATCHED 3 > $tmpstrg");
- 	 ($swap, $SwapTot, $SwapUsed, $SwapFree) = (split /\s+ /, $tmpstrg);
- 	 Debug ("STot > $SwapTot; SUsed > $SwapUsed; SFree > $SwapFree ");
- 	 next;
+ 		Debug ("MATCHED 1 > $tmpstrg");
+ 		($mem, $MemTot, @junk) = (split /\s+/, $tmpstrg);
+ 		Debug ("MEM > $mem TotMem > $MemTot");
+ 		next;
+   	}elsif ($tmpstrg =~ /^\-\/\+/) {
+ 	
+ 		Debug ("MATCHED 2 > $tmpstrg");
+ 		($buff, $MemUsed, $MemFree) = (split /\s+ /, $tmpstrg);
+ 		Debug ("Used > $MemUsed  Free  > $MemFree");
+ 		next;
+   	}elsif ($tmpstrg =~ /^Swap/) {
+	 	Debug ("MATCHED 3 > $tmpstrg");
+ 	 	($swap, $SwapTot, $SwapUsed, $SwapFree) = (split /\s+ /, $tmpstrg);
+ 	 	Debug ("STot > $SwapTot; SUsed > $SwapUsed; SFree > $SwapFree ");
+ 	 	next;
 	}
+ 	}
  }
 }
 
