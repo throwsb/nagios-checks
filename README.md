@@ -15,6 +15,8 @@ David
 * **check_hpLocaldisk.pl** - is a check script to monitor local disk status on HP servers.  It connects to the local disk controller using hpacucli or hpssacli 
     and pulls the status of the disks.  Full details of the script can be found here [check hpLocaldisk](https://github.com/throwsb/nagios-checks/blob/master/check_hpLocaldisk.md)
 
+* **check_cpu_util.pl** - Checks the CPU utilization across all CPU's on a server and returns the percentage used. Full details of the script can be found here [check cpu util](https://github.com/throwsb/nagios-checks/blob/master/check_cpu_util.md)
+
 * **check_memoryfree.pl** - Checks the memory and swap usage on a Linux server using the free command.  Full details of the script can be found here [check memoryfree](https://github.com/throwsb/nagios-checks/blob/master/check_memorylinux.md)
 
 * **check_memory-linux.pl** - Checks the memory usage on a Linux server with a SNMP query.  Full details of the script can be found here [check memory Linux](https://github.com/throwsb/nagios-checks/blob/master/check_memorylinux.md)
