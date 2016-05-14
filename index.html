@@ -32,12 +32,12 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h1>
-<a id="nagios-checks" class="anchor" href="#nagios-checks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nagios Checks</h1>
+<a id="nagios-checks" class="anchor" href="#nagios-checks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Nagios Checks</h1>
 
 <p>Monitoring Check Scripts used with Nagios and NagiosXI</p>
 
 <h2>
-<a id="welcome-to-my-github-site" class="anchor" href="#welcome-to-my-github-site" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to my Github site.</h2>
+<a id="welcome-to-my-github-site" class="anchor" href="#welcome-to-my-github-site" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to my Github site.</h2>
 
 <p>The following are a list of Nagios check scripts that I have created over the years.  Please feel free to contact me with any feature requests, bug reports, or support for installation and configuration.  </p>
 
@@ -45,12 +45,13 @@
 David</p>
 
 <h3>
-<a id="list-of-nagios-check-scripts" class="anchor" href="#list-of-nagios-check-scripts" aria-hidden="true"><span class="octicon octicon-link"></span></a>List of Nagios Check Scripts</h3>
+<a id="list-of-nagios-check-scripts" class="anchor" href="#list-of-nagios-check-scripts" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>List of Nagios Check Scripts</h3>
 
 <ul>
 <li><p><strong>check_wls.pl</strong> - Checks the health of a Weblogic instance using jmx and wlst.  This has been tested using Weblogic 12c.  Please send feedback when running on other versions of WebLogic.  I do not have access to older version to test on.  Full details of the script can be found here <a href="https://github.com/throwsb/nagios-checks/blob/master/check_wls.md">check wls</a></p></li>
 <li><p><strong>check_hpLocaldisk.pl</strong> - is a check script to monitor local disk status on HP servers.  It connects to the local disk controller using hpacucli or hpssacli 
 and pulls the status of the disks.  Full details of the script can be found here <a href="https://github.com/throwsb/nagios-checks/blob/master/check_hpLocaldisk.md">check hpLocaldisk</a></p></li>
+<li><p><strong>check_cpu_util.pl</strong> - Checks the CPU utilization across all CPU's on a server and returns the percentage used. Full details of the script can be found here <a href="https://github.com/throwsb/nagios-checks/blob/master/check_cpu_util.md">check cpu util</a></p></li>
 <li><p><strong>check_memoryfree.pl</strong> - Checks the memory and swap usage on a Linux server using the free command.  Full details of the script can be found here <a href="https://github.com/throwsb/nagios-checks/blob/master/check_memorylinux.md">check memoryfree</a></p></li>
 <li><p><strong>check_memory-linux.pl</strong> - Checks the memory usage on a Linux server with a SNMP query.  Full details of the script can be found here <a href="https://github.com/throwsb/nagios-checks/blob/master/check_memorylinux.md">check memory Linux</a></p></li>
 <li><p><strong>check_cpu-hpux.pl</strong> - Checks CPU usage on a HP-UX server.  Full details of the script can be found here <a href="https://github.com/throwsb/nagios-checks/blob/master/check_hpux.md">check CPU HP-UX</a></p></li>
