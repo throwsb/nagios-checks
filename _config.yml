@@ -1,0 +1,8 @@
+title: Nagios-checks
+description: Monitoring Check Scripts used with Nagios and NagiosXI
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-slate
+
+gems:
+  - jekyll-mentions
