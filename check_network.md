@@ -119,4 +119,4 @@ Add to the nrpe common.cfg
 	command[check_network]=/usr/local/nagios/libexec/check_network.pl $ARG1$
 ```	
 	
-[Nagios Checks Home](http://throwsb.github.io/nagios/)
+[Nagios Checks Home](http://throwsb.github.io/nagios-checks/)

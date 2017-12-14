@@ -60,4 +60,4 @@ Add to the nrpe common.cfg
 	command[check_diskIO]=/usr/local/nagios/libexec/check_diskIO.pl $ARG1$
 ```	
 	
-[Nagios Checks Home](http://throwsb.github.io/nagios/)
+[Nagios Checks Home](http://throwsb.github.io/nagios-checks/)
