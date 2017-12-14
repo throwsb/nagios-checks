@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ###################
-# check script to check for CPU Util
+# check script to check for Disk IO
 #  usage on linux.  The base is
 #  using the sar command
 #
@@ -9,7 +9,7 @@
 #
 # Licensed under GNU GPLv3 - see the LICENSE file in the git repository.
 #
-#  Created by David Worth 24-Feb-2016
+#  Created by David Worth 20-Feb-2017
 #  version 0.10
 ###################
 
@@ -28,25 +28,22 @@ $STATUS_UNKNOWN=3;
 ($HOST) = split /\./, hostname();
 $DEBUG=$FALSE;
 $STATUS = "UNKNOWN";
-$CRITICAL = "95";
-$WARNING = "85";
+$CRITICAL = "2000";
+$WARNING = "1000";
 $SWAP=$FALSE;
 $DISPLAY_STATUS;
 $PROB_STATUS;
 
-$SAR="/usr/bin/sar";
-$SARINT=10;
+$SAR="/usr/bin/sar -b";
+$SARINT=15;
 $SARCOUNT=1;
-$SAROPTS=" 1 10";
-$CPU;
-$USR=0;
-$NICE=0;
-$SYSTEM=0;
-$IOWAIT=0;
-$STEAL=0;
-$IDLE=0;
-$CPU_USED=0;
-$CPUStat="";
+#$SAROPTS=" 1 15";
+$TPS=0;
+$RREQTPS=0;
+$WREQTPS=0;
+$BLKREADS=0;
+$BLKWRTNS=0;
+
 $UNIT="%";
 
 
@@ -76,32 +73,27 @@ sub Usage {
 
   warn <<EOF;
 
-  $MYNAME - Checks the CPU utilization across all CPU's on a server
-  			and returns the percentage used.  It will also provide the
-  			following statistics:
+  $MYNAME - Checks the disk I/O and transfer rate.  It will also
+			provide the following statistics:
 
-  			%CPU - Total percentage of CPU utilization.
-  			%user - Percentage of CPU utilization at the user level.
-  			%system - Percentage of CPU utilization at the system level.
-  			%iowait - Percentage of time that the CPU or CPUs were idle
-  				during which the system had an outstanding disk I/O request.
+  			tps - Total number of transfers per second that were issued to physical devices.
+  			rtps - Total number of read requests per second issued to physical devices.
+  			wtps - Total number of write requests per second issued to physical devices.
+  			blkreas/s - Total amount of data read from the devices in blocks per second.
+  			blkwrtn/s - Total amount of data written to devices in blocks per second.
 
   usage: $MYNAME -ds -c <critical value> -w <warning value>
 
 	-c <interger>
-		This is the precentage with out % sign.  E.G. 95 would
-		represent 95% CPU Utilized.  Default value is 95.
-		Exit with a critical status if less than the
-		percent of CPU idle.
+		Default value is 2000.
+		Exit with a critical status if less than average tps.
 	-w <interger>
-		This is the precentage with out % sign.  E.G. 95 would
-		represent 95% CPU Utilized.  Default value is 85.
-		Exit with a warning status if less than the
-		percent of CPU idle.
-	-C <interger>
-		This sets the interval for a single data run to collect.  
+		Default value is 1000.
+		Exit with a warning status if less than average tps.
+	-i <interger>
+		This sets the interval for a single data run to collect.
 		The result is the average of the collected sample.
-		The default is 10.
+		The default is 15.
 	-d Debug
 
 EOF
@@ -110,10 +102,10 @@ EOF
 }
 
 
-&Get_CPU_Status();
+&Get_DISKIO_Status();
 &Return_Status();
 
-sub Get_CPU_Status
+sub Get_DISKIO_Status
 {
  foreach (`$SAR $SARINT $SARCOUNT`) {
    Debug (" LINE > $_ ");
@@ -122,40 +114,39 @@ sub Get_CPU_Status
    if ($tmpstrg =~ /^Average/) {
 
  	Debug ("MATCHED 1 > $tmpstrg");
- 	($type, $CPU, $USER, $NICE, $SYSTEM, $IOWAIT, $STEAL, $IDLE) = (split /\s+/, $tmpstrg);
- 	Debug ("$type, $CPU, $USER, $NICE, $SYSTEM, $IOWAIT, $STEAL, $IDLE");
+ 	($type, $TPS, $RREQTPS, $WREQTPS, $BLKREADS, $BLKWRTNS) = (split /\s+/, $tmpstrg);
+ 	Debug ("$type, $TPS, $RREQTPS, $WREQTPS, $BLKREADS, $BLKWRTNS");
  	next;
    }
  }
 
- ##Calculate CPU Used
- $CPU_USED = 100 - $IDLE;
- $CPU_USED = sprintf"%.2f",$CPU_USED;
 
- $DISPLAY_STATUS = "CPU_USED=$CPU_USED\%;$WARNING;$CRITICAL;; USER=$USER\%;$WARNING;$CRITICAL;; SYSTEM=$SYSTEM\%;$WARNING;$CRITICAL;; IOWAIT=$IOWAIT\%;$WARNING;$CRITICAL;; ";
- &Nagios_Status($CPU_USED,$USER,$SYSTEM,$IOWAIT);
+ $DISPLAY_STATUS = "Trans_Per_Sec=$TPS;$WARNING;$CRITICAL;; Read_Req_Per_Sec=$RREQTPS;;;; Write_Req_Per_Sec=$WREQTPS;;;; BLK_Read_Per_Sec=$BLKREADS;;;; BLK_Write_Per_Sec=$BLKWRTNS;;;;";
+ &Nagios_Status($TPS,$RREQTPS,$WREQTPS,$BLKREADS,BLKWRTNS);
 }
 
 
 sub Nagios_Status {
-	my $CPU_USED = shift;
-	my $USER = shift;
-	my $SYSTEM = shift;
-	my $IOWAIT = shift;
+	my $TPS = shift;
+	my $RREQTPS = shift;
+	my $WREQTPS = shift;
+	my $BLKREADS = shift;
+	my $BLKWRTNS = shift;
 
 	##Nagios Status
-  if ($CRITICAL < $CPU_USED) {
+  if ($CRITICAL < $TPS) {
 	  $STATUS = "CRITICAL";
-	  $PROB_STATUS = "$PROB_STATUS CPU_USED=$CPU_USED$UNIT;USER:$USER$UNIT;SYSTEM:$SYSTEM$UNIT;IOWait:$IOWAIT$UNIT";
-	} elsif ($WARNING < $CPU_USED) {
+	  $PROB_STATUS = "$PROB_STATUS Trans_Per_Sec=$TPS;Read_Req_Per_Sec=$RREQTPS;Write_Req_Per_Sec=$WREQTPS;BLK_Read_Per_Sec=$BLKREADS;BLK_Write_Per_Sec=$BLKREADS";
+
+	} elsif ($WARNING < $TPS) {
 		if ($STATUS eq "CRITICAL") {
 
-			$PROB_STATUS = "$PROB_STATUS CPU_USED=$CPU_USED$UNIT;USER:$USER$UNIT;SYSTEM:$SYSTEM$UNIT;IOWait:$IOWAIT$UNIT";
+			$PROB_STATUS = "$PROB_STATUS Trans_Per_Sec=$TPS;Read_Req_Per_Sec=$RREQTPS;Write_Req_Per_Sec=$WREQTPS;BLK_Read_Per_Sec=$BLKREADS;BLK_Write_Per_Sec=$BLKREADS";
 
 		} elsif (($STATUS eq "UNKNOWN") || ($STATUS eq "WARNING") || ($STATUS eq "OK")) {
 
 			$STATUS = "WARNING";
-			$PROB_STATUS = "$PROB_STATUS CPU_USED=$CPU_USED$UNIT;USER:$USER$UNIT;SYSTEM:$SYSTEM$UNIT;IOWait:$IOWAIT$UNIT";
+			$PROB_STATUS = "$PROB_STATUS Trans_Per_Sec=$TPS;Read_Req_Per_Sec=$RREQTPS;Write_Req_Per_Sec=$WREQTPS;BLK_Read_Per_Sec=$BLKREADS;BLK_Write_Per_Sec=$BLKREADS";
 
 		}
 	} else {
